@@ -16,8 +16,8 @@ import java.util.Calendar;
  */
 public class Database {
 
-	public static ArrayList<Auto> elencoNoleggioSocio() {
-		ArrayList<Auto> elenco = new ArrayList<Auto>();
+	public static ArrayList<Noleggio> elencoNoleggioSocio(String dataInizio, String dataFine, String cf) {
+		ArrayList<Noleggio> elenco = new ArrayList<Noleggio>();
 		Connection cn;
 		Statement st;
 		ResultSet rs;
@@ -32,18 +32,18 @@ public class Database {
 
 		try {
 			// Creo la connessione al database
-			cn = DriverManager.getConnection("jdbc:mysql://localhost:3306/test?user=root&password=");
+			cn = DriverManager.getConnection("jdbc:mysql://localhost:3306/carsharing?user=root&password=");
 
-			sql = "SELECT id, nome, cognome, dataNascita FROM amici;";
+			sql = "SELECT * FROM noleggio,socio WHERE noleggio.inizio>='"+dataInizio+"' AND socio.cf='"+ cf + "';";
 			// ________________________________query
 
 			st = cn.createStatement(); // creo sempre uno statement sulla
 										// connessione
 			rs = st.executeQuery(sql); // faccio la query su uno statement
 			while (rs.next() == true) {
-				Auto a = new Auto(rs.getString("targa"), rs.getString("marca"), rs.getString("modello"),
-						rs.getDouble("costoGiornaliero"));
-				elenco.add(a);
+				Noleggio n = new Noleggio(rs.getString("codiceNoleggio"), rs.getString("auto"), rs.getString("socio"), rs.getString("inizio"),
+						rs.getString("fine"), rs.getInt("autoRestituita"));
+				elenco.add(n);
 			}
 
 			cn.close(); // chiusura connessione
@@ -56,7 +56,7 @@ public class Database {
 	}
 
 	
-	public static void nuovaAuto(Auto a) {
+	public static void nuovoNoleggio(String cf, String dataInizio, String dataFine, String auto) {
 		Connection cn;
 		Statement st;
 		String sql;
@@ -67,18 +67,15 @@ public class Database {
 			System.out.println("ClassNotFoundException: ");
 			System.err.println(e.getMessage());
 		} // fine try-catch
+		
+		
 
 		try {
 			// Creo la connessione al database
-			cn = DriverManager.getConnection("jdbc:mysql://localhost:3306/test?user=root&password=");
-
-			String targa = a.getTarga();
-			String marca = a.getMarca();
-			String modello = a.getModello();
-			Double costoG = a.getCostoGiornaliero();
+			cn = DriverManager.getConnection("jdbc:mysql://localhost:3306/carsharing?user=root&password=");
 		
-			sql = "insert into auto (targa, marca, modello, costoGiornaliero) values ('" + targa + "','" + marca + "','" + modello
-					+ "','" + costoG + "')";
+			sql = "insert into noleggio (codiceNoleggio,auto,socio,inizio,fine,autoRestituita) values (null,'" + auto + "','" + cf
+					+ "','" + dataInizio + "','"+dataFine+"','"+0+"')";
 			System.out.println(sql);
 			// ________________________________query
 
@@ -93,7 +90,7 @@ public class Database {
 	}
 
 	
-	public static void modificaAuto(Auto a) {
+	public static void elencoAutoDisponibili(String dataInizio) {
 		Connection cn;
 		Statement st;
 		String sql;
@@ -109,13 +106,11 @@ public class Database {
 			cn = DriverManager.getConnection("jdbc:mysql://localhost:3306/test?user=root&password=");
 
 			// Inserisco nelle variabili i valori da modificare
-			String targa = a.getTarga();
-			String marca = a.getMarca();
-			String modello = a.getModello();
-			Double costoG = a.getCostoGiornaliero();
 
-			sql = "update amici set targa='" + targa + "', marca = '" + marca + "', modello='" + modello
-					+ "',costoGiornaliero='" +costoG +"'  where targa=" + targa;
+			sql = "SELECT targa FROM auto,noleggio "
+					+ "INNER JOIN noleggio "
+					+ "ON auto.targa = noleggio.auto "
+					+ "WHERE noleggio.fine <'" + dataInizio + "' AND noleggio.autoRestituita='1'";
 			System.out.println(sql); // stampa la query
 			// ________________________________query
 
