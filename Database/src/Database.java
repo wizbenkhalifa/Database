@@ -103,7 +103,7 @@ public class Database {
 		} // fine try-catch
 		try {
 			// Creo la connessione al database
-			cn = DriverManager.getConnection("jdbc:mysql://localhost:3306/test?user=root&password=");
+			cn = DriverManager.getConnection("jdbc:mysql://localhost:3306/carsharing?user=root&password=");
 
 			// Inserisco nelle variabili i valori da modificare
 
@@ -125,7 +125,7 @@ public class Database {
 	}
 
 	
-	public static void eliminaAuto(Auto a) {
+	public static void eliminaNoleggio(String targa) {
 		Connection cn;
 		Statement st;
 		String sql;
@@ -138,11 +138,42 @@ public class Database {
 		} // fine try-catch
 		try {
 			// Creo la connessione al database
-			cn = DriverManager.getConnection("jdbc:mysql://localhost:3306/test?user=root&password=");
+			cn = DriverManager.getConnection("jdbc:mysql://localhost:3306/carsharing?user=root&password=");
 
 			// Recupero l'id. Se volessi fare altri controlli potrei recuperare
 			// anche gli altri valori
-			String targa = a.getTarga();
+
+			sql = "delete from noleggio where auto=" + targa;
+			System.out.println(sql); // stampa la query
+			// ________________________________query
+
+			st = cn.createStatement(); // creo sempre uno statement sulla
+										// connessione
+			st.execute(sql); // faccio la query su uno statement
+			cn.close(); // chiusura connessione
+		} catch (SQLException e) {
+			System.out.println("errore:" + e.getMessage());
+		} // fine try-catch
+
+	}
+	
+	public static void eliminaAuto(String targa) {
+		Connection cn;
+		Statement st;
+		String sql;
+		// ________________________________connessione
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+		} catch (ClassNotFoundException e) {
+			System.out.println("ClassNotFoundException: ");
+			System.err.println(e.getMessage());
+		} // fine try-catch
+		try {
+			// Creo la connessione al database
+			cn = DriverManager.getConnection("jdbc:mysql://localhost:3306/carsharing?user=root&password=");
+
+			// Recupero l'id. Se volessi fare altri controlli potrei recuperare
+			// anche gli altri valori
 
 			sql = "delete from auto where targa=" + targa;
 			System.out.println(sql); // stampa la query
@@ -156,6 +187,37 @@ public class Database {
 			System.out.println("errore:" + e.getMessage());
 		} // fine try-catch
 
+	}
+	
+	public static void updateDatabase(){
+		Connection cn;
+		Statement st;
+		String sql;
+		// ________________________________connessione
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+		} catch (ClassNotFoundException e) {
+			System.out.println("ClassNotFoundException: ");
+			System.err.println(e.getMessage());
+		} // fine try-catch
+		try {
+			// Creo la connessione al database
+			cn = DriverManager.getConnection("jdbc:mysql://localhost:3306/carsharing?user=root&password=");
+
+			// Recupero l'id. Se volessi fare altri controlli potrei recuperare
+			// anche gli altri valori
+
+			sql = "SELECT * FROM auto";
+			System.out.println(sql); // stampa la query
+			// ________________________________query
+
+			st = cn.createStatement(); // creo sempre uno statement sulla
+										// connessione
+			st.execute(sql); // faccio la query su uno statement
+			cn.close(); // chiusura connessione
+		} catch (SQLException e) {
+			System.out.println("errore:" + e.getMessage());
+		} // fine try-catch
 	}
 	
 	 
