@@ -62,7 +62,14 @@ public class Database {
 		Connection cn;
 		Statement st;
 		String sql;
+		Calendar data = Calendar.getInstance();
+		data.getTime();
+		String sqlDataI = data.get(Calendar.YEAR) + "-" + data.get(Calendar.MONTH) + "-"
+				+ data.get(Calendar.DAY_OF_MONTH); //2016-12-20
+		String sqlDataF = data.get(Calendar.YEAR) + "-" + data.get(Calendar.MONTH) + "-"
+				+ data.get(Calendar.DAY_OF_MONTH); //2016-12-20
 		// ________________________________connessione
+		
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 		} catch (ClassNotFoundException e) {
@@ -73,9 +80,15 @@ public class Database {
 		try {
 			// Creo la connessione al database
 			cn = DriverManager.getConnection("jdbc:mysql://localhost:3306/carsharing?user=root&password=");
+<<<<<<< HEAD
 
 			sql = "insert into noleggio (codiceNoleggio,auto,socio,inizio,fine,autoRestituita) values (null,'" + auto
 					+ "','" + cf + "','" + dataI + "','" + dataF + "','" + 0 + "')";
+=======
+		
+			sql = "insert into noleggi (codiceNoleggio,auto,socio,inizio,fine,autoRestituita) values (null,'" + auto + "','" + cf
+					+ "','" + sqlDataI + "','"+sqlDataF+"','"+0+"')";
+>>>>>>> branch 'master' of https://github.com/wizbenkhalifa/Database.git
 			System.out.println(sql);
 			// ________________________________query
 
