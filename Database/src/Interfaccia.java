@@ -160,6 +160,7 @@ public class Interfaccia {
 			public void widgetSelected(SelectionEvent e) {
 				java.text.DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 				java.util.Date dataI = null;
+				java.util.Date dataF = null;
 				try {
 					dataI = df.parse(dateTime_2.getYear() + "-" + dateTime_2.getMonth() + "-" + dateTime_2.getDay());
 				} catch (ParseException e1) {
@@ -167,8 +168,6 @@ public class Interfaccia {
 					e1.printStackTrace();
 				}
 				
-				java.text.DateFormat df2 = new SimpleDateFormat("yyyy-MM-dd");
-				java.util.Date dataF = null;
 				try {
 					dataF = df.parse(dateTime_3.getYear() + "-" + dateTime_3.getMonth() + "-" + dateTime_3.getDay());
 				} catch (ParseException e1) {
