@@ -1,4 +1,5 @@
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,6 +16,7 @@ import java.util.Calendar;
  *
  */
 public class Database {
+	//ArrayList<Noleggio>
 
 	public static ArrayList<Noleggio> elencoNoleggioSocio(String dataInizio, String dataFine, String cf) {
 		ArrayList<Noleggio> elenco = new ArrayList<Noleggio>();
@@ -22,6 +24,7 @@ public class Database {
 		Statement st;
 		ResultSet rs;
 		String sql;
+		
 		// ________________________________connessione
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
@@ -41,10 +44,11 @@ public class Database {
 										// connessione
 			rs = st.executeQuery(sql); // faccio la query su uno statement
 			while (rs.next() == true) {
-				Noleggio n = new Noleggio(rs.getString("codiceNoleggio"), rs.getString("auto"), rs.getString("socio"), rs.getString("inizio"),
+				Noleggio n  = new Noleggio(rs.getString("codiceNoleggio"), rs.getString("auto"), rs.getString("socio"), rs.getString("inizio"),
 						rs.getString("fine"), rs.getInt("autoRestituita"));
 				elenco.add(n);
 			}
+			
 
 			cn.close(); // chiusura connessione
 		} catch (SQLException e) {
@@ -56,7 +60,7 @@ public class Database {
 	}
 
 	
-	public static void nuovoNoleggio(String cf, String dataInizio, String dataFine, String auto) {
+	public static void nuovoNoleggio(String cf, java.util.Date dataI, java.util.Date dataF, String auto) {
 		Connection cn;
 		Statement st;
 		String sql;
@@ -75,7 +79,7 @@ public class Database {
 			cn = DriverManager.getConnection("jdbc:mysql://localhost:3306/carsharing?user=root&password=");
 		
 			sql = "insert into noleggio (codiceNoleggio,auto,socio,inizio,fine,autoRestituita) values (null,'" + auto + "','" + cf
-					+ "','" + dataInizio + "','"+dataFine+"','"+0+"')";
+					+ "','" + dataI + "','"+dataF+"','"+0+"')";
 			System.out.println(sql);
 			// ________________________________query
 
