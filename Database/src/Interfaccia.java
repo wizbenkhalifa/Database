@@ -1,6 +1,12 @@
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.List;
+
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
@@ -15,7 +21,10 @@ public class Interfaccia {
 	protected Shell shell;
 	private Text text;
 	private Text text_1;
-	public elencoNoleggioSocio socio = new elencoNoleggioSocio();
+	Database d = new Database();
+	String dataInizio = null;
+	String dataFine = null;
+	String cf = null;
 	
 
 	/**
@@ -23,6 +32,7 @@ public class Interfaccia {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		
 		
 		try {
 			Interfaccia window = new Interfaccia();
@@ -65,6 +75,9 @@ public class Interfaccia {
 		text = new Text(shell, SWT.BORDER);
 		text.setBounds(54, 30, 157, 21);
 		
+		text_1 = new Text(shell, SWT.BORDER);
+		text_1.setBounds(342, 122, 133, 21);
+		
 		Label lblDatainizio = new Label(shell, SWT.NONE);
 		lblDatainizio.setBounds(10, 69, 61, 15);
 		lblDatainizio.setText("DataInizio : ");
@@ -83,6 +96,21 @@ public class Interfaccia {
 		btnNewButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				
+				d.elencoNoleggioSocio(dataInizio, dataFine, cf);
+
+				Calendar data = Calendar.getInstance();			
+				dateTime.setYear(data.get(Calendar.YEAR));
+				dateTime.setMonth(data.get(Calendar.MONTH));
+				dateTime.setDay(data.get(Calendar.DAY_OF_MONTH));	
+				
+				dateTime_1.setYear(data.get(Calendar.YEAR));
+				dateTime_1.setMonth(data.get(Calendar.MONTH));
+				dateTime_1.setDay(data.get(Calendar.DAY_OF_MONTH));	
+			
+				
+						
+				
 				
 				
 			}
@@ -116,22 +144,48 @@ public class Interfaccia {
 		lblModello.setText("Modello :");
 		
 		Combo combo = new Combo(shell, SWT.NONE);
+		combo.setItems(new String[] {"IBIZA", "LEON", "500", "ESPACE"});
 		combo.setBounds(317, 93, 91, 23);
 		
 		Label lblInserimento = new Label(shell, SWT.NONE);
 		lblInserimento.setBounds(317, 10, 80, 15);
 		lblInserimento.setText("INSERIMENTO");
 		
+		Combo combo_1 = new Combo(shell, SWT.NONE);
+		combo_1.setBounds(319, 232, 91, 23);
+		
 		Button btnInserisci = new Button(shell, SWT.NONE);
+		btnInserisci.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				java.text.DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+				java.util.Date dataI = null;
+				try {
+					dataI = df.parse(dateTime_2.getYear() + "-" + dateTime_2.getMonth() + "-" + dateTime_2.getDay());
+				} catch (ParseException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+				java.text.DateFormat df2 = new SimpleDateFormat("yyyy-MM-dd");
+				java.util.Date dataF = null;
+				try {
+					dataF = df.parse(dateTime_3.getYear() + "-" + dateTime_3.getMonth() + "-" + dateTime_3.getDay());
+				} catch (ParseException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+				
+				d.nuovoNoleggio(text_1.getText(), dataI, dataF, combo_1.getText());
+			}
+		});
 		btnInserisci.setBounds(307, 165, 75, 25);
 		btnInserisci.setText("Inserisci");
 		
 		Label lblNewLabel = new Label(shell, SWT.NONE);
 		lblNewLabel.setBounds(258, 127, 80, 15);
 		lblNewLabel.setText("codiceFiscale :");
-		
-		text_1 = new Text(shell, SWT.BORDER);
-		text_1.setBounds(342, 122, 133, 21);
 		
 		Label label_1 = new Label(shell, SWT.SEPARATOR | SWT.HORIZONTAL);
 		label_1.setBounds(258, 210, 217, 2);
@@ -143,9 +197,6 @@ public class Interfaccia {
 		Button btnElimina = new Button(shell, SWT.NONE);
 		btnElimina.setBounds(258, 271, 75, 25);
 		btnElimina.setText("Elimina");
-		
-		Combo combo_1 = new Combo(shell, SWT.NONE);
-		combo_1.setBounds(319, 232, 91, 23);
 		
 		Button btnNewButton_1 = new Button(shell, SWT.NONE);
 		btnNewButton_1.setBounds(400, 438, 75, 25);
