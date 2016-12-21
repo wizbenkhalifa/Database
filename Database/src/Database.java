@@ -66,16 +66,14 @@ public class Database {
 
 		Class.forName("com.mysql.jdbc.Driver");
 
-		// Creo la connessione al database
+		
 		cn = DriverManager.getConnection("jdbc:mysql://localhost:3306/carsharing?user=root&password=");
 
-		// Inserisco nelle variabili i valori da modificare
+		
 
 		sql = "SELECT * FROM auto INNER JOIN noleggi " + "ON auto.targa = noleggi.auto "
 				+ "WHERE noleggi.autoRestituita='1'";
-		System.out.println(sql); // stampa la query
-		// ________________________________query
-
+		System.out.println(sql);
 		st = cn.createStatement();
 		rs = st.executeQuery(sql);
 		while(rs.next()){
@@ -88,8 +86,6 @@ public class Database {
 
 	public static void eliminaNoleggio(String targa) throws ClassNotFoundException, SQLException {
 		String sql;
-		// ________________________________connessione
-
 		Class.forName("com.mysql.jdbc.Driver");
 
 		cn = DriverManager.getConnection("jdbc:mysql://localhost:3306/carsharing?user=root&password=");
@@ -120,16 +116,14 @@ public class Database {
 
 	}
 
-	public static void updateDatabase(String Data) throws SQLException, ClassNotFoundException {
+	public static void updateNoleggio(String dataF, String indice) throws SQLException, ClassNotFoundException {
 		String sql;
-
 		Class.forName("com.mysql.jdbc.Driver");
-
 		cn = DriverManager.getConnection("jdbc:mysql://localhost:3306/carsharing?user=root&password=");
-
-		sql = "SELECT * FROM auto";
 		st = cn.createStatement();
-		st.execute(sql);
+		rs = st.executeQuery("SELECT fine FROM noleggi WHERE codiceNoleggio ='" + indice + "';");
+		String fine = rs.getString("fine");
+		System.out.println(fine);
 		cn.close();
 
 	}

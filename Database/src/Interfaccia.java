@@ -107,7 +107,7 @@ public class Interfaccia {
 				}
 			}
 		});
-		btnNewButton.setBounds(82, 104, 75, 25);
+		btnNewButton.setBounds(10, 101, 75, 25);
 		btnNewButton.setText("Invio");
 
 		Label label = new Label(shell, SWT.SEPARATOR | SWT.VERTICAL);
@@ -181,8 +181,18 @@ public class Interfaccia {
 		Button btnNewButton_1 = new Button(shell, SWT.NONE);
 		btnNewButton_1.setBounds(400, 438, 75, 25);
 		btnNewButton_1.setText("Aggiorna");
-
 		
+		Button btnNewButton_2 = new Button(shell, SWT.NONE);
+		btnNewButton_2.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				//Database.updateNoleggio(dataF, indice);
+			}
+		});
+		btnNewButton_2.setBounds(103, 104, 75, 25);
+		btnNewButton_2.setText("Restituisci");
+		
+		//Carica le auto resituite e disponibili per il noleggio
 		try {
 			autoDisp = Database.elencoAutoDisponibili();
 		} catch (ClassNotFoundException | SQLException e1) {
