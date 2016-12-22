@@ -8,6 +8,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.concurrent.TimeUnit;
 
 public class Database {
 	// ArrayList<Noleggio>
@@ -66,22 +67,21 @@ public class Database {
 
 		Class.forName("com.mysql.jdbc.Driver");
 
-		
 		cn = DriverManager.getConnection("jdbc:mysql://localhost:3306/carsharing?user=root&password=");
 
-		
-
-		sql = "SELECT * FROM auto INNER JOIN noleggi ON auto.targa=noleggi.auto WHERE auto.targa NOT IN(SELECT targa FROM auto INNER JOIN noleggi " + "ON auto.targa = noleggi.auto "
-				+ "WHERE noleggi.inizio<='"+dataI+"' AND noleggi.fine>='"+dataI+"') GROUP BY auto.targa;";
+		sql = "SELECT * FROM auto INNER JOIN noleggi ON auto.targa=noleggi.auto WHERE auto.targa NOT IN(SELECT targa FROM auto INNER JOIN noleggi "
+				+ "ON auto.targa = noleggi.auto " + "WHERE noleggi.inizio<='" + dataI + "' AND noleggi.fine>='" + dataI
+				+ "') GROUP BY auto.targa;";
 		System.out.println(sql);
 		st = cn.createStatement();
 		rs = st.executeQuery(sql);
-		while(rs.next()){
-			auto.add(new Auto(rs.getString("targa"), rs.getString("marca"), rs.getString("modello"), rs.getDouble("costoGiornaliero")));
+		while (rs.next()) {
+			auto.add(new Auto(rs.getString("targa"), rs.getString("marca"), rs.getString("modello"),
+					rs.getDouble("costoGiornaliero")));
 		}
-		cn.close(); 
+		cn.close();
 		return auto;
-		
+
 	}
 
 	public static void eliminaNoleggio(String targa) throws ClassNotFoundException, SQLException {
@@ -118,11 +118,33 @@ public class Database {
 
 	public static void updateNoleggio(String dataF, String indice) throws SQLException, ClassNotFoundException {
 		String sql;
+		String fine = null, costoGiornaliero = null, inizio = null;
 		Class.forName("com.mysql.jdbc.Driver");
 		cn = DriverManager.getConnection("jdbc:mysql://localhost:3306/carsharing?user=root&password=");
 		st = cn.createStatement();
-		rs = st.executeQuery("SELECT fine FROM noleggi WHERE codiceNoleggio ='" + indice + "';");
-		String fine = rs.getString("fine");
+		rs = st.executeQuery(
+				"SELECT noleggi.fine,noleggi.inizio,auto.costoGiornaliero FROM auto INNER JOIN noleggi ON auto.targa = noleggi.auto WHERE codiceNoleggio ='"
+						+ indice + "';");
+		while (rs.next()) {
+			fine = rs.getString("fine");
+			inizio = rs.getString("inizio");
+			costoGiornaliero = rs.getString("costoGiornaliero");
+		}
+		SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd");
+		long diff, daysDiff, costoNoleggio;
+		try {
+		    java.util.Date date1 = myFormat.parse(inizio);
+		    java.util.Date date2 = myFormat.parse(fine);
+		    diff = date2.getTime() - date1.getTime();
+		    daysDiff = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
+		    costoNoleggio = daysDiff*(Integer.parseInt(costoGiornaliero));
+		    date2 = myFormat.parse(dataF);
+		    diff = date2.getTime() - date1.getTime();
+		    daysDiff = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
+		    
+		} catch (ParseException e) {
+		    e.printStackTrace();
+		}
 		System.out.println(fine);
 		cn.close();
 
