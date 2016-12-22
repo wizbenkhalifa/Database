@@ -60,7 +60,7 @@ public class Database {
 
 	}
 
-	public static ArrayList<Auto> elencoAutoDisponibili() throws ClassNotFoundException, SQLException {
+	public static ArrayList<Auto> elencoAutoDisponibili(String dataI) throws ClassNotFoundException, SQLException {
 		String sql;
 		ArrayList<Auto> auto = new ArrayList<Auto>();
 
@@ -71,8 +71,8 @@ public class Database {
 
 		
 
-		sql = "SELECT * FROM auto INNER JOIN noleggi " + "ON auto.targa = noleggi.auto "
-				+ "WHERE noleggi.autoRestituita='1'";
+		sql = "SELECT * FROM auto INNER JOIN noleggi ON auto.targa=noleggi.auto WHERE auto.targa NOT IN(SELECT targa FROM auto INNER JOIN noleggi " + "ON auto.targa = noleggi.auto "
+				+ "WHERE noleggi.inizio<='"+dataI+"' AND noleggi.fine>='"+dataI+"') GROUP BY auto.targa;";
 		System.out.println(sql);
 		st = cn.createStatement();
 		rs = st.executeQuery(sql);

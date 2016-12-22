@@ -204,7 +204,7 @@ public class Interfaccia {
 		
 		//Carica le auto resituite e disponibili per il noleggio
 		try {
-			autoDisp = Database.elencoAutoDisponibili();
+			autoDisp = Database.elencoAutoDisponibili("2017-12-1");
 		} catch (ClassNotFoundException | SQLException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
