@@ -4,6 +4,7 @@ import org.eclipse.swt.widgets.List;
 
 import java.sql.Date;
 import java.sql.SQLException;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ public class Interfaccia {
 	String dataFine = null;
 	String cf = null;
 	ArrayList<Auto> autoDisp;
+	ArrayList<Noleggio> noleggi;
 	/**
 	 * Launch the application.
 	 * 
@@ -91,7 +93,7 @@ public class Interfaccia {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				String dataI = dateInizio.getYear() + "-" + (dateInizio.getMonth() + 1) + "-" + dateInizio.getDay();
-				ArrayList<Noleggio> noleggi = new ArrayList<Noleggio>();
+				noleggi = new ArrayList<Noleggio>();
 				System.out.println(dataI);
 				cf = textCf.getText();
 				try {
@@ -186,7 +188,15 @@ public class Interfaccia {
 		btnNewButton_2.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				//Database.updateNoleggio(dataF, indice);
+				DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+				java.util.Date date = Calendar.getInstance().getTime();
+				System.out.println(dateFormat.format(date));
+				try {
+					Database.updateNoleggio(date.getYear()+"-"+date.getMonth()+"-"+date.getDate(), noleggi.get(listNoleggi.getSelectionIndex()).getCodiceNoleggio());
+				} catch (ClassNotFoundException | SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		});
 		btnNewButton_2.setBounds(103, 104, 75, 25);
