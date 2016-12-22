@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -188,11 +190,11 @@ public class Interfaccia {
 		btnNewButton_2.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+				DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 				java.util.Date date = Calendar.getInstance().getTime();
 				System.out.println(dateFormat.format(date));
 				try {
-					Database.updateNoleggio(date.getYear()+"-"+date.getMonth()+"-"+date.getDate(), noleggi.get(listNoleggi.getSelectionIndex()).getCodiceNoleggio());
+					Database.updateNoleggio(dateFormat.format(date), noleggi.get(listNoleggi.getSelectionIndex()).getCodiceNoleggio());
 				} catch (ClassNotFoundException | SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -204,7 +206,10 @@ public class Interfaccia {
 		
 		//Carica le auto resituite e disponibili per il noleggio
 		try {
-			autoDisp = Database.elencoAutoDisponibili("2017-12-1");
+			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+			LocalDate localDate = LocalDate.now();
+			System.out.println(dtf.format(localDate)); //2016/11/16
+			autoDisp = Database.elencoAutoDisponibili(dtf.format(localDate));
 		} catch (ClassNotFoundException | SQLException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
