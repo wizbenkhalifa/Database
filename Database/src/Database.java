@@ -60,7 +60,6 @@ public class Database {
 		cn.close();
 
 	}
-	
 
 	public static ArrayList<Auto> elencoAutoDisponibili(String dataI) throws ClassNotFoundException, SQLException {
 		String sql;
@@ -117,44 +116,58 @@ public class Database {
 
 	}
 
-	public static void updateNoleggio(String dataF, String indice) throws SQLException, ClassNotFoundException {
+	public static int updateNoleggio(String dataF, String indice) throws SQLException, ClassNotFoundException {
 		String sql;
 		String fine = null, inizio = null;
 		double costoGiornaliero = 0;
+		boolean rest;
 		Class.forName("com.mysql.jdbc.Driver");
 		cn = DriverManager.getConnection("jdbc:mysql://localhost:3306/carsharing?user=root&password=");
 		st = cn.createStatement();
 		rs = st.executeQuery(
-				"SELECT noleggi.fine,noleggi.inizio,auto.costoGiornaliero FROM auto INNER JOIN noleggi ON auto.targa = noleggi.auto WHERE codiceNoleggio ='"
+				"SELECT noleggi.fine,noleggi.inizio,auto.costoGiornaliero, noleggi.autoRestituita FROM auto INNER JOIN noleggi ON auto.targa = noleggi.auto WHERE codiceNoleggio ='"
 						+ indice + "';");
 		while (rs.next()) {
 			fine = rs.getString("fine");
 			inizio = rs.getString("inizio");
 			costoGiornaliero = rs.getDouble("costoGiornaliero");
+			rest = rs.getBoolean("autoRestituita");
 		}
-		SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd");
-		long diff = 0, daysDiff1 = 0, daysDiff2=0, costoNoleggio = 0;
-		try {
-		    java.util.Date date1 = myFormat.parse(inizio);
-		    java.util.Date date2 = myFormat.parse(fine);
-		    diff = date1.getTime() - date2.getTime();
-		    daysDiff1 = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
-		    date2 = myFormat.parse(dataF);
-		    diff = date1.getTime() - date2.getTime();
-		    daysDiff2 = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
-		    if(daysDiff2 < 0){
-		    	daysDiff1 = Math.abs(daysDiff1)  - Math.abs(daysDiff2);
-		    	costoNoleggio = Math.abs(daysDiff1)*((int)(costoGiornaliero));
-		    	System.out.println(inizio + " - " + fine + " - " + costoNoleggio + " - " + Math.abs(daysDiff1) + " - " + daysDiff2);
-		    }else{
-		    	costoNoleggio = Math.abs(daysDiff1)*((int)costoGiornaliero) + (Math.abs(daysDiff2) * 25);
-		    	System.out.println(inizio + " - " + fine + " - " + costoGiornaliero + " - " + Math.abs(daysDiff1) + " - " + costoNoleggio);
-		    }
-		} catch (ParseException e) {
-		    e.printStackTrace();
+		if (rs.getBoolean("autoRestituita")) {
+			
+			SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd");
+			long diff = 0, daysDiff1 = 0, daysDiff2 = 0, costoNoleggio = 0;
+			try {
+				java.util.Date date1 = myFormat.parse(inizio);
+				java.util.Date date2 = myFormat.parse(fine);
+				diff = date1.getTime() - date2.getTime();
+				daysDiff1 = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
+				date2 = myFormat.parse(dataF);
+				diff = date1.getTime() - date2.getTime();
+				daysDiff2 = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
+				if (daysDiff2 < 0) {
+					daysDiff1 = Math.abs(daysDiff1) - Math.abs(daysDiff2);
+					costoNoleggio = Math.abs(daysDiff1) * ((int) (costoGiornaliero));
+					System.out.println(inizio + " - " + fine + " - " + costoNoleggio + " - " + Math.abs(daysDiff1)
+							+ " - " + daysDiff2);
+				} else {
+					costoNoleggio = Math.abs(daysDiff1) * ((int) costoGiornaliero) + (Math.abs(daysDiff2) * 25);
+					System.out.println(inizio + " - " + fine + " - " + costoGiornaliero + " - " + Math.abs(daysDiff1)
+							+ " - " + costoNoleggio);
+				}
+				st = cn.createStatement();
+				st.executeQuery("UPDATE noleggi SET autoRestituita = '1', fine='" + date2 + "' WHERE codiceNoleggio = '"
+						+ indice + "';");
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			cn.close();
+			return (int) costoNoleggio;
+		} else {
+			System.out.println("Auto gia restituita");
+			cn.close();
+			return -1;
 		}
-		
-		cn.close();
 
 	}
 
