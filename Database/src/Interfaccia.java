@@ -157,7 +157,7 @@ public class Interfaccia {
 				String dataI = dateInizio2.getYear() + "-" + (dateInizio2.getMonth() + 1) + "-" + dateInizio2.getDay();
 				String dataF = dateFine2.getYear() + "-" + (dateFine2.getMonth() + 1) + "-" + dateFine2.getDay();
 				try {
-					Database.nuovoNoleggio(textCF2.getText(), dataI, dataF, comboModello2.getText());
+					Database.nuovoNoleggio(textCF2.getText(), dataI, dataF, autoDisp.get(comboModello.getSelectionIndex()).getTarga());
 				} catch (SQLException | ClassNotFoundException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();

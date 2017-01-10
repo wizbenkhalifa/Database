@@ -60,6 +60,7 @@ public class Database {
 		cn.close();
 
 	}
+	
 
 	public static ArrayList<Auto> elencoAutoDisponibili(String dataI) throws ClassNotFoundException, SQLException {
 		String sql;
@@ -118,7 +119,8 @@ public class Database {
 
 	public static void updateNoleggio(String dataF, String indice) throws SQLException, ClassNotFoundException {
 		String sql;
-		String fine = null, costoGiornaliero = null, inizio = null;
+		String fine = null, inizio = null;
+		double costoGiornaliero = 0;
 		Class.forName("com.mysql.jdbc.Driver");
 		cn = DriverManager.getConnection("jdbc:mysql://localhost:3306/carsharing?user=root&password=");
 		st = cn.createStatement();
@@ -128,24 +130,30 @@ public class Database {
 		while (rs.next()) {
 			fine = rs.getString("fine");
 			inizio = rs.getString("inizio");
-			costoGiornaliero = rs.getString("costoGiornaliero");
+			costoGiornaliero = rs.getDouble("costoGiornaliero");
 		}
 		SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd");
-		long diff, daysDiff, costoNoleggio;
+		long diff = 0, daysDiff1 = 0, daysDiff2=0, costoNoleggio = 0;
 		try {
 		    java.util.Date date1 = myFormat.parse(inizio);
 		    java.util.Date date2 = myFormat.parse(fine);
-		    diff = date2.getTime() - date1.getTime();
-		    daysDiff = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
-		    costoNoleggio = daysDiff*(Integer.parseInt(costoGiornaliero));
+		    diff = date1.getTime() - date2.getTime();
+		    daysDiff1 = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
 		    date2 = myFormat.parse(dataF);
-		    diff = date2.getTime() - date1.getTime();
-		    daysDiff = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
-		    
+		    diff = date1.getTime() - date2.getTime();
+		    daysDiff2 = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
+		    if(daysDiff2 < 0){
+		    	daysDiff1 = Math.abs(daysDiff1)  - Math.abs(daysDiff2);
+		    	costoNoleggio = Math.abs(daysDiff1)*((int)(costoGiornaliero));
+		    	System.out.println(inizio + " - " + fine + " - " + costoNoleggio + " - " + Math.abs(daysDiff1) + " - " + daysDiff2);
+		    }else{
+		    	costoNoleggio = Math.abs(daysDiff1)*((int)costoGiornaliero) + (Math.abs(daysDiff2) * 25);
+		    	System.out.println(inizio + " - " + fine + " - " + costoGiornaliero + " - " + Math.abs(daysDiff1) + " - " + costoNoleggio);
+		    }
 		} catch (ParseException e) {
 		    e.printStackTrace();
 		}
-		System.out.println(fine);
+		
 		cn.close();
 
 	}
