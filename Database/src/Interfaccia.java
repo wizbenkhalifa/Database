@@ -20,6 +20,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.wb.swt.SWTResourceManager;
 
 public class Interfaccia {
 
@@ -67,28 +68,28 @@ public class Interfaccia {
 	 */
 	protected void createContents() {
 		shell = new Shell();
-		shell.setSize(501, 525);
-		shell.setText("SWT Application");
+		shell.setSize(760, 525);
+		shell.setText("Autonoleggio");
 
 		List listNoleggi = new List(shell, SWT.BORDER);
-		listNoleggi.setBounds(10, 135, 201, 328);
+		listNoleggi.setBounds(10, 33, 225, 127);
 
 		Label lblSocio = new Label(shell, SWT.NONE);
-		lblSocio.setBounds(10, 36, 40, 15);
+		lblSocio.setBounds(10, 222, 40, 15);
 		lblSocio.setText("Socio :");
 
 		textCf = new Text(shell, SWT.BORDER);
-		textCf.setBounds(54, 30, 157, 21);
+		textCf.setBounds(56, 219, 40, 21);
 
 		textCF2 = new Text(shell, SWT.BORDER);
-		textCF2.setBounds(342, 122, 133, 21);
+		textCF2.setBounds(363, 348, 23, 21);
 
 		Label lblDatainizio = new Label(shell, SWT.NONE);
-		lblDatainizio.setBounds(10, 69, 61, 15);
+		lblDatainizio.setBounds(10, 273, 61, 15);
 		lblDatainizio.setText("DataInizio : ");
 
 		DateTime dateInizio = new DateTime(shell, SWT.BORDER);
-		dateInizio.setBounds(78, 63, 80, 24);
+		dateInizio.setBounds(88, 264, 80, 24);
 
 		Button btnNewButton = new Button(shell, SWT.NONE);
 		btnNewButton.addSelectionListener(new SelectionAdapter() {
@@ -111,44 +112,46 @@ public class Interfaccia {
 				}
 			}
 		});
-		btnNewButton.setBounds(10, 101, 75, 25);
-		btnNewButton.setText("Invio");
+		btnNewButton.setBounds(10, 314, 75, 25);
+		btnNewButton.setText("Cerca");
 
 		Label label = new Label(shell, SWT.SEPARATOR | SWT.VERTICAL);
 		label.setBounds(250, 10, 2, 467);
 
 		Label lblRicerca = new Label(shell, SWT.NONE);
-		lblRicerca.setBounds(78, 10, 55, 15);
-		lblRicerca.setText("RICERCA");
+		lblRicerca.setFont(SWTResourceManager.getFont("Segoe UI", 11, SWT.NORMAL));
+		lblRicerca.setBounds(35, 6, 133, 21);
+		lblRicerca.setText("Ricerca Noleggi");
 
 		Label lblDatainizio_1 = new Label(shell, SWT.NONE);
-		lblDatainizio_1.setBounds(258, 36, 66, 15);
+		lblDatainizio_1.setBounds(269, 250, 66, 15);
 		lblDatainizio_1.setText("DataInizio :");
 
 		DateTime dateInizio2 = new DateTime(shell, SWT.BORDER);
-		dateInizio2.setBounds(317, 30, 80, 24);
+		dateInizio2.setBounds(341, 241, 80, 24);
 
 		Label lblDatafine = new Label(shell, SWT.NONE);
-		lblDatafine.setBounds(258, 69, 55, 15);
+		lblDatafine.setBounds(269, 284, 55, 15);
 		lblDatafine.setText("DataFine :");
 
 		DateTime dateFine2 = new DateTime(shell, SWT.BORDER);
-		dateFine2.setBounds(317, 60, 80, 24);
+		dateFine2.setBounds(341, 275, 80, 24);
 
 		Label lblModello = new Label(shell, SWT.NONE);
-		lblModello.setBounds(258, 101, 55, 15);
+		lblModello.setBounds(269, 319, 55, 15);
 		lblModello.setText("Modello :");
 
 		Combo comboModello = new Combo(shell, SWT.NONE);
 		comboModello.setItems(new String[] {});
-		comboModello.setBounds(317, 93, 91, 23);
+		comboModello.setBounds(341, 316, 91, 23);
 
 		Label lblInserimento = new Label(shell, SWT.NONE);
-		lblInserimento.setBounds(317, 10, 80, 15);
-		lblInserimento.setText("INSERIMENTO");
+		lblInserimento.setFont(SWTResourceManager.getFont("Segoe UI", 11, SWT.NORMAL));
+		lblInserimento.setBounds(302, 6, 119, 25);
+		lblInserimento.setText("Inserisci Noleggio");
 
 		Combo comboModello2 = new Combo(shell, SWT.NONE);
-		comboModello2.setBounds(319, 232, 91, 23);
+		comboModello2.setBounds(586, 219, 91, 23);
 
 		Button btnInserisci = new Button(shell, SWT.NONE);
 		btnInserisci.addSelectionListener(new SelectionAdapter() {
@@ -164,26 +167,23 @@ public class Interfaccia {
 				}
 			}
 		});
-		btnInserisci.setBounds(307, 165, 75, 25);
+		btnInserisci.setBounds(260, 385, 75, 25);
 		btnInserisci.setText("Inserisci");
 
 		Label lblNewLabel = new Label(shell, SWT.NONE);
-		lblNewLabel.setBounds(258, 127, 80, 15);
+		lblNewLabel.setBounds(269, 351, 80, 15);
 		lblNewLabel.setText("codiceFiscale :");
 
-		Label label_1 = new Label(shell, SWT.SEPARATOR | SWT.HORIZONTAL);
-		label_1.setBounds(258, 210, 217, 2);
-
 		Label lblNewLabel_1 = new Label(shell, SWT.NONE);
-		lblNewLabel_1.setBounds(258, 235, 55, 15);
+		lblNewLabel_1.setBounds(510, 222, 55, 15);
 		lblNewLabel_1.setText("Modello :");
 
 		Button btnElimina = new Button(shell, SWT.NONE);
-		btnElimina.setBounds(258, 271, 75, 25);
+		btnElimina.setBounds(510, 263, 75, 25);
 		btnElimina.setText("Elimina");
 
 		Button btnNewButton_1 = new Button(shell, SWT.NONE);
-		btnNewButton_1.setBounds(400, 438, 75, 25);
+		btnNewButton_1.setBounds(258, 175, 75, 25);
 		btnNewButton_1.setText("Aggiorna");
 		
 		Button btnNewButton_2 = new Button(shell, SWT.NONE);
@@ -201,8 +201,39 @@ public class Interfaccia {
 				}
 			}
 		});
-		btnNewButton_2.setBounds(103, 104, 75, 25);
+		btnNewButton_2.setBounds(102, 314, 75, 25);
 		btnNewButton_2.setText("Restituisci");
+		
+		Label label_2 = new Label(shell, SWT.SEPARATOR | SWT.VERTICAL);
+		label_2.setBounds(502, 10, 2, 467);
+		
+		Combo combo = new Combo(shell, SWT.NONE);
+		combo.setBounds(102, 219, 109, 23);
+		
+		Label lblEliminaNoleggio = new Label(shell, SWT.NONE);
+		lblEliminaNoleggio.setFont(SWTResourceManager.getFont("Segoe UI", 11, SWT.NORMAL));
+		lblEliminaNoleggio.setBounds(564, 6, 127, 21);
+		lblEliminaNoleggio.setText("Elimina Noleggio");
+		
+		List list = new List(shell, SWT.BORDER);
+		list.setBounds(258, 58, 238, 102);
+		
+		Label lblAutoDisponibili = new Label(shell, SWT.NONE);
+		lblAutoDisponibili.setBounds(258, 37, 107, 15);
+		lblAutoDisponibili.setText("Auto disponibili");
+		
+		List list_1 = new List(shell, SWT.BORDER);
+		list_1.setBounds(510, 33, 224, 127);
+		
+		Combo combo_1 = new Combo(shell, SWT.NONE);
+		combo_1.setBounds(392, 346, 91, 23);
+		
+		Label lblSocio_1 = new Label(shell, SWT.NONE);
+		lblSocio_1.setBounds(510, 193, 55, 15);
+		lblSocio_1.setText("Socio :");
+		
+		Combo combo_2 = new Combo(shell, SWT.NONE);
+		combo_2.setBounds(586, 190, 91, 23);
 		
 		//Carica le auto resituite e disponibili per il noleggio
 		try {
