@@ -25,14 +25,14 @@ import org.eclipse.wb.swt.SWTResourceManager;
 public class Interfaccia {
 
 	protected Shell shell;
-	private Text textCf;
-	private Text textCF2;
 	Database d = new Database();
 	String dataInizio = null;
 	String dataFine = null;
 	String cf = null;
 	ArrayList<Auto> autoDisp;
+	ArrayList<Socio> socio;
 	ArrayList<Noleggio> noleggi;
+	ArrayList<Noleggio> elNoleggi;
 	/**
 	 * Launch the application.
 	 * 
@@ -68,7 +68,7 @@ public class Interfaccia {
 	 */
 	protected void createContents() {
 		shell = new Shell();
-		shell.setSize(760, 525);
+		shell.setSize(817, 525);
 		shell.setText("Autonoleggio");
 
 		List listNoleggi = new List(shell, SWT.BORDER);
@@ -77,12 +77,8 @@ public class Interfaccia {
 		Label lblSocio = new Label(shell, SWT.NONE);
 		lblSocio.setBounds(10, 222, 40, 15);
 		lblSocio.setText("Socio :");
-
-		textCf = new Text(shell, SWT.BORDER);
-		textCf.setBounds(56, 219, 40, 21);
-
-		textCF2 = new Text(shell, SWT.BORDER);
-		textCF2.setBounds(363, 348, 23, 21);
+		
+		Combo combo = new Combo(shell, SWT.NONE);
 
 		Label lblDatainizio = new Label(shell, SWT.NONE);
 		lblDatainizio.setBounds(10, 273, 61, 15);
@@ -90,6 +86,8 @@ public class Interfaccia {
 
 		DateTime dateInizio = new DateTime(shell, SWT.BORDER);
 		dateInizio.setBounds(88, 264, 80, 24);
+		
+		
 
 		Button btnNewButton = new Button(shell, SWT.NONE);
 		btnNewButton.addSelectionListener(new SelectionAdapter() {
@@ -98,13 +96,19 @@ public class Interfaccia {
 				String dataI = dateInizio.getYear() + "-" + (dateInizio.getMonth() + 1) + "-" + dateInizio.getDay();
 				noleggi = new ArrayList<Noleggio>();
 				System.out.println(dataI);
-				cf = textCf.getText();
+			   
+				cf = combo.getText();
+				
 				try {
 					noleggi = Database.elencoNoleggioSocio(dataI, cf);
 				} catch (ClassNotFoundException | SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
+			
+				
+				
+				
 				for (int i = 0; i < noleggi.size(); i++) {
 					listNoleggi.add(noleggi.get(i).getCodiceNoleggio() + " - " + noleggi.get(i).getAuto() + " - "
 							+ noleggi.get(i).getInizio() + " - " + noleggi.get(i).getFine() + " - "
@@ -114,12 +118,13 @@ public class Interfaccia {
 		});
 		btnNewButton.setBounds(10, 314, 75, 25);
 		btnNewButton.setText("Cerca");
+		
+		Combo combo_1 = new Combo(shell, SWT.NONE);
 
 		Label label = new Label(shell, SWT.SEPARATOR | SWT.VERTICAL);
 		label.setBounds(250, 10, 2, 467);
 
 		Label lblRicerca = new Label(shell, SWT.NONE);
-		lblRicerca.setFont(SWTResourceManager.getFont("Segoe UI", 11, SWT.NORMAL));
 		lblRicerca.setBounds(35, 6, 133, 21);
 		lblRicerca.setText("Ricerca Noleggi");
 
@@ -146,7 +151,6 @@ public class Interfaccia {
 		comboModello.setBounds(341, 316, 91, 23);
 
 		Label lblInserimento = new Label(shell, SWT.NONE);
-		lblInserimento.setFont(SWTResourceManager.getFont("Segoe UI", 11, SWT.NORMAL));
 		lblInserimento.setBounds(302, 6, 119, 25);
 		lblInserimento.setText("Inserisci Noleggio");
 
@@ -160,7 +164,7 @@ public class Interfaccia {
 				String dataI = dateInizio2.getYear() + "-" + (dateInizio2.getMonth() + 1) + "-" + dateInizio2.getDay();
 				String dataF = dateFine2.getYear() + "-" + (dateFine2.getMonth() + 1) + "-" + dateFine2.getDay();
 				try {
-					Database.nuovoNoleggio(textCF2.getText(), dataI, dataF, autoDisp.get(comboModello.getSelectionIndex()).getTarga());
+					Database.nuovoNoleggio(combo_1.getText(), dataI, dataF, autoDisp.get(comboModello.getSelectionIndex()).getTarga());
 				} catch (SQLException | ClassNotFoundException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -179,11 +183,30 @@ public class Interfaccia {
 		lblNewLabel_1.setText("Modello :");
 
 		Button btnElimina = new Button(shell, SWT.NONE);
+		btnElimina.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				try {
+					Database.eliminaNoleggio(comboModello2.getText());
+				} catch (ClassNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
 		btnElimina.setBounds(510, 263, 75, 25);
 		btnElimina.setText("Elimina");
 
 		Button btnNewButton_1 = new Button(shell, SWT.NONE);
-		btnNewButton_1.setBounds(258, 175, 75, 25);
+		btnNewButton_1.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+			}
+		});
+		btnNewButton_1.setBounds(659, 452, 75, 25);
 		btnNewButton_1.setText("Aggiorna");
 		
 		Button btnNewButton_2 = new Button(shell, SWT.NONE);
@@ -207,11 +230,8 @@ public class Interfaccia {
 		Label label_2 = new Label(shell, SWT.SEPARATOR | SWT.VERTICAL);
 		label_2.setBounds(502, 10, 2, 467);
 		
-		Combo combo = new Combo(shell, SWT.NONE);
-		combo.setBounds(102, 219, 109, 23);
-		
 		Label lblEliminaNoleggio = new Label(shell, SWT.NONE);
-		lblEliminaNoleggio.setFont(SWTResourceManager.getFont("Segoe UI", 11, SWT.NORMAL));
+
 		lblEliminaNoleggio.setBounds(564, 6, 127, 21);
 		lblEliminaNoleggio.setText("Elimina Noleggio");
 		
@@ -223,17 +243,13 @@ public class Interfaccia {
 		lblAutoDisponibili.setText("Auto disponibili");
 		
 		List list_1 = new List(shell, SWT.BORDER);
-		list_1.setBounds(510, 33, 224, 127);
+		list_1.setBounds(510, 33, 281, 127);
 		
-		Combo combo_1 = new Combo(shell, SWT.NONE);
-		combo_1.setBounds(392, 346, 91, 23);
 		
-		Label lblSocio_1 = new Label(shell, SWT.NONE);
-		lblSocio_1.setBounds(510, 193, 55, 15);
-		lblSocio_1.setText("Socio :");
+		combo_1.setBounds(351, 345, 91, 23);
 		
-		Combo combo_2 = new Combo(shell, SWT.NONE);
-		combo_2.setBounds(586, 190, 91, 23);
+		
+		combo.setBounds(77, 219, 91, 23);
 		
 		//Carica le auto resituite e disponibili per il noleggio
 		try {
@@ -247,6 +263,45 @@ public class Interfaccia {
 		}
 		for(int i=0; i<autoDisp.size(); i++){
 			comboModello.add(autoDisp.get(i).getMarca() + " - " + autoDisp.get(i).getModello());
+			comboModello2.add(autoDisp.get(i).getMarca() + " - " + autoDisp.get(i).getModello());
+			
+			list.add(autoDisp.get(i).getMarca() + " - " + autoDisp.get(i).getModello());
 		}
+		
+		
+		try {
+			String dataI = dateInizio.getYear() + "-" + (dateInizio.getMonth() + 1) + "-" + dateInizio.getDay();
+			
+			socio = Database.elencoSoci(dataI);
+		} catch (ClassNotFoundException | SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		for (int i = 0; i < socio.size(); i++) {
+			combo.add(socio.get(i).getCf());
+			combo_1.add(socio.get(i).getCf());
+			//combo_2.add(socio.get(i).getCf());
+			
+		}
+		
+
+		try {
+			elNoleggi=Database.elencoNoleggi();
+		} catch (ClassNotFoundException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		} catch (SQLException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
+		
+		for (int i = 0; i < elNoleggi.size(); i++) {
+			list_1.add(elNoleggi.get(i).getCodiceNoleggio() + " - " + elNoleggi.get(i).getAuto() + " - "
+					+ elNoleggi.get(i).getInizio() + " - " + elNoleggi.get(i).getFine() + " - "
+					+ elNoleggi.get(i).getAutoRestituita());
+		}
+		
+			
 	}
 }
